@@ -83,7 +83,7 @@ public class MainController {
 		return modelview;
     }
 	
-	@GetMapping("delete/{username}")
+	@GetMapping("/delete/{username}")
 	public ModelAndView deleteuser(@SessionAttribute("userdetails") Users userdetails,@PathVariable("username") String username)
 	{
 		List<Users> deleteuser = repo.findByUsername(username);

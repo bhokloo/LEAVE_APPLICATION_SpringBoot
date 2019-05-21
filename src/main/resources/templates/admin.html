@@ -98,7 +98,7 @@
         <td th:text="${user.password}"></td>
         <td th:text="${user.role_name}"></td>
         <td> 
-        <a th:href="@{delete/__${user.username}__}" class="btn btn-danger">Delete</a>
+        <a th:href="@{/delete/__${user.username}__}" class="btn btn-danger">Delete</a>
         <!-- <a th:href="@{__${user.username}__}" class="btn btn-danger" data-toggle="modal" data-target="#editmodal">Edit</a> -->
         <button type="button" class="btn btn-primary" data-toggle="collapse" th:attr="data-target='#'+${user.username}">Edit</button>
         <div th:attr="id=${user.username}" class="collapse">
