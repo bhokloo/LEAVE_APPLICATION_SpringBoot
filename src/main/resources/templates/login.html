@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+  <body>
+<div class="container">
+<div class="jumbotron" style="padding:0px; padding-left:30px;background-color:gainsboro">   
+<h1>Login page</h1>       
+<table class="table table-bordered" style="">
+<tr>
+<td>
+<form class="form-inline" action="#" th:action="@{/admin}" th:object="${admin}" method="post">
+		  <p>Username: <input type="text" th:field="*{username}" /></p>
+		  <p>Password: <input type="text" th:field="*{password}" /></p>
+		  <input type="submit" />
+		  <input type="reset" value="Reset" />
+	</form>
+</td>
+</tr>
+</table>
+</div>
+</div>
+    
+	
+  </body>
+</html>
