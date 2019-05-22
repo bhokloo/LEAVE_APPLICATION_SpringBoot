@@ -37,18 +37,6 @@ import edu.iss.nus.laps.repository.LeaveRepository;
 @SessionAttributes("userdetails")
 public class MainController {
 	
-	String[] publicholidays = new String[] {		
-			"2019-05-28",
-			"2019-06-05",
-			"2019-06-11",
-			"2019-06-14",
-			"2019-06-27",
-			"2019-07-03",
-			"2019-07-05"
-	};
-	
-	
-	
 	public static ArrayList<String> arraylist = new ArrayList<String>() {
 		{
 	    add("2019-05-28");
@@ -60,14 +48,6 @@ public class MainController {
 		add("2019-07-05");
 		}
 	};
-		
-//		if(newdate != null)
-//		{
-//			arraylist.add(newdate);
-//		}
-//		System.out.println(arraylist);
-//		return arraylist;
-	
 	
 	
 	@Autowired
@@ -105,14 +85,12 @@ public class MainController {
 	
 	@RequestMapping(path="/user", method = RequestMethod.POST)
     public ModelAndView user(@Valid Users users,BindingResult bindingResult) {
-		System.out.println("///////////////////////////////////UUUUUUUUUUSEEEEEERRRRRRRR");
 		ModelAndView model = new ModelAndView("login");
 		if (bindingResult.hasErrors()) 
 		{ 
 			return model;
 		} 
 	    List<Users> userdetails = repo.findByUsername(users.getUsername());
-	    System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!" + userdetails);
 	    if(!userdetails.isEmpty())
 	    {
 		    for(Users al : userdetails)
@@ -126,7 +104,6 @@ public class MainController {
 		    	else if(al.getRole_name().equals("manager"))
 		    	{
 		    		 List<Leaveapplication> newlist= leaverepo.findAll();
-		    		 System.out.println("****************************"+newlist);
 		    		 model.addObject("newlist",newlist);
 		    		 model.setViewName("manager");
 		    	}
@@ -297,9 +274,7 @@ public class MainController {
 		{
 			System.out.println(leaveidd);
 		}
-			
-		//leaverepo.modify(d.getUsername(), d.getEmpname(), d.getRole_name(), d.getPassword(), username);
-		//leaverepo.modify(d.getUsername(),username);
+		
 		ModelAndView modelview= new ModelAndView("admin");
 		List<Leaveapplication> leaveplist= leaverepo.findAll();
 		modelview.addObject("leaveplist",leaveplist);
