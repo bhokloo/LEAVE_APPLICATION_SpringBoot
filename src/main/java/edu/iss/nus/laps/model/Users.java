@@ -5,9 +5,11 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
@@ -21,11 +23,22 @@ public class Users {
 	private String empname;
 	private String role_name;
 	private String password;
+	
+	@Transient
+	private String userdetails;
+	
+	
+	public String getUserdetails() {
+		return userdetails;
+	}
+	public void setUserdetails(String userdetails) {
+		this.userdetails = userdetails;
+	}
 	public String getUsername() {
 		return username;
 	}
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "username", referencedColumnName = "username")
 	private List<Leaveapplication> leaveapp;
 	
@@ -60,29 +73,27 @@ public class Users {
 	}
 	
 	
-	public Users(@NotEmpty String username, String empname, String role_name, String password,
-			List<Leaveapplication> leaveapp) {
+	
+	public Users(@NotBlank(message = "Name may not be empty") String username, String empname, String role_name,
+			String password, String userdetails, List<Leaveapplication> leaveapp) {
 		super();
 		this.username = username;
 		this.empname = empname;
 		this.role_name = role_name;
 		this.password = password;
+		this.userdetails = userdetails;
 		this.leaveapp = leaveapp;
 	}
+	
 	public Users() {
 		super();
 		
 	}
-	
 	@Override
 	public String toString() {
 		return "Users [username=" + username + ", empname=" + empname + ", role_name=" + role_name + ", password="
-				+ password + ", leaveapp=" + leaveapp + "]";
+				+ password + ", userdetails=" + userdetails + ", leaveapp=" + leaveapp + "]";
 	}
-
-	
-	
-	
 	
 
 
