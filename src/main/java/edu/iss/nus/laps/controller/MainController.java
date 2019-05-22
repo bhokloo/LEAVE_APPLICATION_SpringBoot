@@ -28,12 +28,10 @@ import edu.iss.nus.laps.repository.LeaveRepository;
 
 
 @Controller
-@SessionAttributes("userdetails")
 public class MainController {
 
-
 	public static ArrayList<String> arraylist = new ArrayList<String>() {
-		{
+	{
 	    add("2019-05-28");
 		add("2019-06-05");
 		add("2019-06-11");
@@ -41,13 +39,9 @@ public class MainController {
 		add("2019-06-27");
 		add("2019-07-03");
 		add("2019-07-05");
-		}
+	}
 
 	};
-
-	
-
-	
 
 	@Autowired
 	private LapsRepository repo;
@@ -64,8 +58,6 @@ public class MainController {
 	
 	@GetMapping("/admin")
     public String admin(Model model,@RequestParam(value="username") String username) {
-		System.out.println("++++++++++++++++++++++++++" + model);
-		System.out.println("++++++++++++++++++++++++++" + username);
 		 Users userdetails = repo.findByUsername(username);
 		 List<Users> plist= repo.findAll();
 		 model.addAttribute("plist",plist);
@@ -121,11 +113,13 @@ public class MainController {
 	
 	
 	@GetMapping("/logout")
-    public String logout(Users users, HttpSession session) {
-		session.removeAttribute("userdetails");
+    public String logout(Users users) {
         return "login";
     }
 
+	
+	//___________________________________ADMIN___________________________________________
+	
 
 	@PostMapping("/adduser")
     public String adduser(Users users) {
@@ -135,321 +129,99 @@ public class MainController {
 	
 	
 	@PostMapping("/delete")
-	public ModelAndView deleteuser(Users users)
+	public String deleteuser(Users users)
 	{
-		 repo.delete(users.getUsername());
-		 return null;
-
-	}
-	
-	
-	@RequestMapping(path="/statusofapplication/{leaveid}", method = RequestMethod.POST)
-    public ModelAndView statusofapplication(@SessionAttribute("userdetails") Users userdetails,@ModelAttribute Leaveapplication lapp,@PathVariable("leaveid") int leaveid) {
-
-		 leaverepo.leaveapplication(lapp.getManagerComment(), lapp.getRadio(), leaveid);
-		 ModelAndView model = new ModelAndView("manager");
-		 List<Leaveapplication> newlist= leaverepo.findAll();
-		 model.addObject("userdetails",userdetails);
-		 model.addObject("newlist",newlist);
-		 return model;
-	}
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	@PostMapping("/{username}")
-
-	public ModelAndView edituser(@SessionAttribute("userdetails") Users userdetails,@ModelAttribute Users d,@PathVariable("username") String username)
-
-	{
-
-		repo.modify(d.getUsername(), d.getEmpname(), d.getRole_name(), d.getPassword(), username);
-
-		//leaverepo.modify(d.getUsername(),username);
-
-		ModelAndView modelview= new ModelAndView("admin");
-
-		List<Users> plist= repo.findAll();
-
-		modelview.addObject("plist",plist);
-
-	    modelview.addObject("userdetails",userdetails);
-
-		return modelview;
-
-		
-
-	}
-
-	
-
-	@GetMapping("dateadd")
-
-	public ModelAndView adddynamicdate(@SessionAttribute("userdetails") Users userdetails,@ModelAttribute Leaveapplication lapp,@RequestParam(name ="newdate",required=false) String newdate) {
-
-	
-
-		if(newdate != null)
-
+		List<Leaveapplication> deleteuser = leaverepo.findByUsername(users.getUsername());
+		for(Leaveapplication al : deleteuser)
 		{
-
-			arraylist.add(newdate);
-
+			leaverepo.delete(al);
 		}
+		repo.delete(users.getUsername());
 
-		ModelAndView modelview= new ModelAndView("manager");
-
-		List<Leaveapplication> newlist= leaverepo.findAll();
-
-	    modelview.addObject("userdetails",userdetails);
-
-	    modelview.addObject("newlist",newlist);
-
-	    modelview.addObject("arraylist",arraylist);
-
-		return modelview;
-
+	    return "redirect:admin?username="+users.getUserdetails();
+	}
+	
+	
+	@PostMapping("/update")
+	public String edituser(Users users)
+	{
+		 repo.modify(users.getEmpname(), users.getRole_name(), users.getPassword(),users.getUsername());
+		 return "redirect:admin?username="+users.getUserdetails();
+	}
+	
+	
+	//____________________________________MANAGER_____________________________________________
+	
+	
+	@PostMapping("/addpublicholiday")
+	public String adddynamicdate(Leaveapplication leaveapp,Users users) {
+		
+		arraylist.add(leaveapp.getNewdate());
+		return "redirect:manager?username="+users.getUserdetails();
 	}
 
 	
+	@PostMapping("/leavestatus")
+    public String statusofapplication(Users userdetails,Leaveapplication lapp) {
+
+		 leaverepo.leaveapplication(lapp.getManagerComment(), lapp.getRadio(),lapp.getLeaveid());
+		 return "redirect:manager?username="+userdetails.getUserdetails();
+	}
+
+
+	//____________________________________Employee_____________________________________________
 
 	
-
-	@RequestMapping(path="/leaveapplication", method = { RequestMethod.POST })
-
-	public ModelAndView leaveapplication(@Valid Leaveapplication leaveapp,BindingResult bindingResult, @SessionAttribute("userdetails") Users userdetails,@ModelAttribute Leaveapplication lapp,@RequestParam(name ="leaveid",required=false) Integer leaveid)
-
+	@PostMapping("/leaveapplication")
+	public String leaveapplication(Leaveapplication lapp)
 	{
-
-
-
-		ModelAndView modelview= new ModelAndView("employee");
-
 		
-
-		if(bindingResult.hasErrors())
-
+		LocalDate startDate = lapp.getStartDate();
+		LocalDate endDate = lapp.getEndDate();
+		boolean noStop = true; int count = 0,all = 0, weekends = 0, pubholidays = 0;
+		if (endDate.getMonthValue() >= startDate.getMonthValue())
 		{
-
-			List<Leaveapplication> leaveplist= leaverepo.findByUsername(userdetails.getUsername());
-
-			System.out.println(bindingResult.toString());
-
-			modelview.addObject("leaveplist",leaveplist);
-
-			return modelview;
-
-		}
-
-
-
-		if(lapp.getStartDate() != null)
-
-		{
-
-		LocalDate startDate = leaveapp.getStartDate();
-
-		LocalDate endDate = leaveapp.getEndDate();
-
-		boolean noStop = true;
-
-		int count = 0;
-
-		int all = 0;
-
-		int weekends = 0;
-
-		int pubholidays = 0;
-
-		if (endDate.getMonthValue() >= startDate.getMonthValue()){
-
 			while (noStop) {
-
 				if (startDate.getDayOfWeek() == DayOfWeek.SATURDAY || startDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-
 					weekends++;
-
 					all++;
-
 				}
-
 			    else if(arraylist.contains(startDate.toString())){
-
 			    	all++;
-
 			    	pubholidays++;
-
 			    }
-
 				else
-
 				{
-
 					count++;
-
 					all++;
-
 				}
 
 				if (startDate.getDayOfMonth() == endDate.getDayOfMonth() && startDate.getMonthValue() == endDate.getMonthValue()) {
-
 					noStop = false;
-
 				}
-
 				startDate = startDate.plusDays(1);
-
 			}
-
 		}
-
 		
-
 		if(all <= 14)
-
-		{
-
 			lapp.setNoOfLeave(count);
 
-		}
-
 		else
-
-		{
-
-			lapp.setNoOfLeave(all);
-
-			
-
-		}
-
+			lapp.setNoOfLeave(all);			
 		
-
 		lapp.setPublicholidays(pubholidays);
-
 		lapp.setWeekends(weekends);
-
-		lapp.setUsername(userdetails.getUsername());
-
 		leaverepo.save(lapp);
-
-		}
-
 		
-
-		List<Leaveapplication> leaveplist= leaverepo.findByUsername(userdetails.getUsername());
-
-		modelview.addObject("leaveplist",leaveplist);
-
-	    modelview.addObject("userdetails",userdetails);
-
-	    modelview.addObject("arraylist",arraylist);
-
-		return modelview;
-
-		
-
+	   return "redirect:employee?username="+lapp.getUsername();			
 	}
 
-	
-
-	
-
-	@GetMapping("/deleteapp/{leaveid}")
-
-	public ModelAndView deleteapp(@SessionAttribute("userdetails") Users userdetails,@PathVariable("leaveid") int leaveid)
-
+	@PostMapping("/deleteapplication")
+	public String deleteapp(Leaveapplication lapp)
 	{
-
-		List<Leaveapplication> deleteapplication = leaverepo.findByLeaveid(leaveid);
-
-		for(Leaveapplication al : deleteapplication)
-
-		{
-
-			leaverepo.delete(al);
-
-		}
-
-		ModelAndView modelview= new ModelAndView("employee");
-
-		List<Leaveapplication> leaveplist= leaverepo.findAll();
-
-		modelview.addObject("leaveplist",leaveplist);
-
-	    modelview.addObject("userdetails",userdetails);
-
-	    modelview.addObject("arraylist",arraylist);
-
-		return modelview;
-
-		
-
+	   leaverepo.delete(lapp.getLeaveid());
+	   return "redirect:employee?username="+lapp.getUsername();
 	}
 
-	
-
-
-
-	@PostMapping("/editapp/{leaveid}")
-
-	public ModelAndView editapp(@SessionAttribute("userdetails") Users userdetails,@ModelAttribute Leaveapplication d,@PathVariable("leaveid") int leaveid)
-
-	{
-
-		String leaveidd = Integer.toString(leaveid);
-
-		if(leaveidd == null)
-
-		{
-
-			System.out.println(leaveidd);
-
-		}
-
-		else
-
-		{
-
-			System.out.println(leaveidd);
-
-		}
-
-		
-
-		ModelAndView modelview= new ModelAndView("admin");
-
-		List<Leaveapplication> leaveplist= leaverepo.findAll();
-
-		modelview.addObject("leaveplist",leaveplist);
-
-	    modelview.addObject("userdetails",userdetails);
-
-	    modelview.addObject("arraylist",arraylist);
-
-		return modelview;
-
-		
-
-	}
-
-	
 
 }

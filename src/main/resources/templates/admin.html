@@ -101,7 +101,7 @@
         <td th:text="${user.password}"></td>
         <td th:text="${user.role_name}"></td>
         <td> 
-        
+        <div th:if="${user.username != userdetails.username}">
           <form class="form-inline" action="#" th:action="@{/delete}" method="post">
 	     
 	      <div class="form-group">
@@ -110,17 +110,27 @@
 	      <div class="form-group">
 	      <input type="hidden" class="form-control" name="username"  th:value="${user.username}">
 	     </div>
-	      <button type="submit" class="btn btn-default">Delete</button>
+	      <div class="form-group">
+	      <input type="hidden" class="form-control" name="role_name"  th:value="${user.role_name}">
+	     </div>
+	      <button type="submit" class="btn btn-success">Delete</button>
+	      <button type="button" class="btn btn-primary" data-toggle="collapse" th:attr="data-target='#'+${user.username}">Edit</button>
     	</form>
-
-        <button type="button" class="btn btn-primary" data-toggle="collapse" th:attr="data-target='#'+${user.username}">Edit</button>
+		
+        
         <div th:attr="id=${user.username}" class="collapse">
-        <form class="form-inline" action="#" th:action="@{/__${user.username}__}" method="post">
+        <form class="form-inline" action="#" th:action="@{/update}" method="post">
 								
 								    <div class="form-group">
 								      <input type="text" class="form-control" th:value="${user.empname}" name="empname">
 								    </div>
-								
+								    <div class="form-group">
+								      <input type="hidden" class="form-control" th:value="${user.username}" name="username">
+								    </div>
+									  <div class="form-group">
+								      <input type="hidden" class="form-control" name="userdetails"  th:value="${userdetails.username}">
+								     </div>
+								     
 								    <div class="form-group" th:field="${user.role_name}">
 									    <select class="form-control" id="select" name="role_name" selected="selected" value="">
 									      <option value="admin">Admin</option>
@@ -136,6 +146,7 @@
 								    <button type="submit" class="btn btn-success">Submit</button>
 								    <button type="button" class="btn btn-warning" data-toggle="collapse" th:attr="data-target='#'+${user.username}">Cancel</button>
 		</form>
+		</div>
 		</div>
         </td>
         

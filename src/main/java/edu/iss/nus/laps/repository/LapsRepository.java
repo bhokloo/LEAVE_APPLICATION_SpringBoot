@@ -15,12 +15,12 @@ public interface LapsRepository extends JpaRepository<Users, String>{
 	
 	@Transactional
 	@Modifying
-	@Query("update Users u set u.username = ?1,u.empname = ?2, u.role_name =?3, u.password = ?4 WHERE u.username =?5")
-	void modify(String username, String empname,String role_name, String password,String previousname);
+	@Query("update Users u set u.empname = ?1, u.role_name =?2, u.password = ?3 WHERE u.username =?4")
+	void modify(String empname,String role_name, String password,String username);
 
 	@Transactional
 	@Modifying
-	@Query("delete from ")
+	@Query("Delete from Users c where c.username =?1")
 	void delete(String username);
 }
 

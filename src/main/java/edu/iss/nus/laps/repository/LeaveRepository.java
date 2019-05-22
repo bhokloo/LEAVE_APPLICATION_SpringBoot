@@ -27,6 +27,11 @@ public interface LeaveRepository extends JpaRepository<Leaveapplication, String>
 	@Query("update Leaveapplication u set u.managerComment = ?1,u.status = ?2 WHERE u.leaveid =?3")
 	void leaveapplication(String managerComment, String status,int leaveid);
 	
+	@Transactional
+	@Modifying
+	@Query("Delete from Leaveapplication c where c.leaveid =?1")
+	void delete(int leaveid);
+	
 	
 //	@Transactional
 //	@Modifying

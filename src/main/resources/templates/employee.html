@@ -16,325 +16,176 @@
 <tbody>
 
       <tr>
-
       	<td style="border-color:transparent">
-
         <h5 style="color:darkslategray"> Welcome: <span th:text="${userdetails.empname}"></span>
-
         ( <span th:text="${userdetails.role_name}"></span> )</h5>
-
 		</td>
-
 		<td style="color:darkslategray;text-align:right;margin-right:10px;vertical-align: inherit;">
-
 		<a href="" data-toggle="modal" data-target="#myModal" style="color:darkslategray">User Details</a>&nbsp;&nbsp;&nbsp; 
-
 		<a href="/logout" style="color:darkslategray;">Logout
-
 		</a>&nbsp;&nbsp;&nbsp;&nbsp;
-
 		</td>
-
-		
-
       </tr>
-
 </tbody>
-
   </table>
-
  </div>  
-
  <div class="modal fade" id="myModal">
-
     <div class="modal-dialog">
-
-      <div class="modal-content">
-
-      
-
+      <div class="modal-content">    
         <div class="modal-header">
-
           <h4 class="modal-title">Name: <span th:text="${userdetails.empname}"></span></h4>
-
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-
         </div>
-
-
-
         <div class="modal-body">
-
           <b>Role Name:</b> <span th:text="${userdetails.role_name}"></span><br/>
-
           <b>Username:</b> <span th:text="${userdetails.username}"></span>
-
         </div>
 
         
 
         <!-- Modal footer -->
-
         <div class="modal-footer">
-
           <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-
         </div>
-
-        
-
+     
       </div>
-
     </div>
-
   </div>
-
   
-
    <table class="table table-bordered">
-
     <thead>
-
       <tr>
-
         <th>Employee's name</th>
-
         <th>Username</th>
-
         <th>Roles</th>
-
       </tr>
-
     </thead>
-
     <tbody>
-
       <tr>
-
         <td th:text="${userdetails.empname}"></td>
-
         <td th:text="${userdetails.username}"></td>
-
         <td th:text="${userdetails.role_name}"></td>
-
-      </tr>
-
-      			
-
+      </tr>    			
     </tbody>
-
   </table>
-
-  
-
   <table class="table table-bordered">
-
    <thead>
-
       <tr>
-
         <th colspan="6">List of Public Holidays</th>
-
       </tr>
-
     </thead>
-
      <tbody>
-
       <tr>
-
   			<td >
-
   			<ul th:each="array : ${arraylist}">
-
   				<li th:text="${array}">
-
   				</li>
-
   			</ul>
-
   			</td>
-
       </tr>		
-
     </tbody>
-
   </table>
 
-  
-
-  
-
-  
 
   <div class="row">
-
 <div class="col-sm-12" style="background-color:white;">
-
 <form class="form-inline" action="#" th:action="@{/leaveapplication}" method="post">
 
-
-
     <div class="form-group">
-
      <label>Start date:</label>
-
       <input type="date" class="form-control" name="startDate">
-
+      <input type="hidden" name="username"  th:value="${userdetails.username}">
     </div>
-
-    
 
     <div class="form-group">
-
       <label>End date:</label>
-
       <input type="date" class="form-control" name="endDate">
-
     </div>
-
-    
 
      <div class="form-group">
-
        <label>Leave Type:</label>
-
 	    <select class="form-control" id="select" name="leaveType">
-
 	      <option value="Annual">Annual</option>
-
 	      <option value="Medical">Medical</option>
-
 	      <option value="Compensation">Compensation</option>
-
 	    </select>
-
     </div>
-
     <div class="form-group">
-
     <label>Reason for Leave</label>
-
       <textarea class="form-control"  name="reason" placeholder="reason"rows="3"></textarea>
-
     </div>
-
-    
 
     <button type="submit" class="btn btn-default">Submit</button>
-
   </form>
-
 </div>
-
 </div>
 
 
 
  <table class="table table-bordered">
-
     <thead>
-
       <tr>
-
         <th>Start Date</th>
-
         <th>End Date</th>
-
          <th>No of Applied leave</th>
-
          <th>Sat-Sun</th>
-
          <th>Public holidays</th>
-
         <th>leave Type</th>
-
         <th>Annual Leave</th>
-
         <th>Reasons</th>
-
         <th>Medical Leave</th>
-
          <th>Manager's Comment</th>
-
         <th>Status</th>
-
         <th></th>
 
-       
-
-       
 
       </tr>
-
     </thead>
-
     <tbody th:each="u : ${leaveplist}">
-
       <tr>
-
-
-
         <td th:text="${u.startDate}"></td>
-
         <td th:text="${u.endDate}"></td>
-
         <td th:text="${u.noOfLeave}"></td>
-
         <td th:text="${u.weekends}"></td>
-
         <td th:text="${u.publicholidays}"></td>
-
         <td th:text="${u.leaveType}"></td>
-
         <td th:text="${u.annualLeave}"></td>
-
         <td th:text="${u.reason}"></td>
-
         <td th:text="${u.medicalLeave}"></td>
-
         <td th:text="${u.managerComment}"></td>
-
         <td th:text="${u.status}"></td>
-
         <td> 
-
         <div th:unless="${u.status}">
-
-        <a th:href="@{/deleteapp/__${u.leaveid}__}" class="btn btn-danger">Delete</a>
-
+         <form class="form-inline" action="#" th:action="@{/deleteapplication}" method="post">
+	     
+	      <div class="form-group">
+	      <input type="hidden" class="form-control" name="username"  th:value="${userdetails.username}">
+	     </div>
+	      <div class="form-group">
+	      <input type="hidden" class="form-control" name="leaveid"  th:value="${u.leaveid}">
+	     </div>
+	      <button type="submit" class="btn btn-default">Delete</button>
+    	</form>
         <button type="button" class="btn btn-primary" data-toggle="collapse" th:attr="data-target='#'+${u.leaveid}">Edit</button>
-
         <div th:attr="id=${u.leaveid}" class="collapse">
-
         <form class="form-inline" action="#" th:action="@{/leaveapplication}" method="post">
-
-								
-
+					
 								    <div class="form-group">
-
-								      <input type="text" class="form-control" th:value="${u.startDate}" name="startDate">
-
+								     <input type="text" class="form-control" th:value="${u.startDate}" name="startDate">
 								    </div>
 
-								    
-
+										<div class="form-group">
+									      <input type="hidden" class="form-control" name="username"  th:value="${userdetails.username}">
+									  </div>
+								     
 								     <div class="form-group">
-
 								      <input type="hidden" class="form-control" th:value="${u.leaveid}" name="leaveid">
-
 								    </div>
-
 								    
-
 								    <div class="form-group">
-
 								      <input type="text" class="form-control" th:value="${u.endDate}" name="endDate">
-
 								    </div>
-
 								    
-
 								    <div class="form-group" th:field="${u.leaveType}">
 									    <select class="form-control" id="select" name="leaveType" selected="selected" value="">
 									    <option value="Annual">Annual</option>
@@ -350,27 +201,12 @@
 								    <button type="button" class="btn btn-warning" data-toggle="collapse" th:attr="data-target='#'+${u.leaveid}">Cancel</button>
 
 		</form>
-
 		</div>
-
 		</div>
-
         </td>
-
       </tr>
-
-      			
-
     </tbody>
-
   </table>
-
-  
-
-
-
  </div>
-
 </body>
-
 </html>
