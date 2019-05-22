@@ -25,7 +25,22 @@ public class LapsApplication implements CommandLineRunner{
 		user.setRole_name("admin");
 		user.setPassword("123abc");
 		user.setEmpname("Indrajit Maurya");
+		
+		Users user1= new Users();
+		user1.setUsername("soe");
+		user1.setRole_name("employee");
+		user1.setPassword("123a");
+		user1.setEmpname("Soehan");
+		
+		Users user2= new Users();
+		user2.setUsername("yang");
+		user2.setRole_name("manager");
+		user2.setPassword("123a");
+		user2.setEmpname("Yangue");
+		
 		repo.save(user);
+		repo.save(user1);
+		repo.save(user2);
 		
 	}
 }

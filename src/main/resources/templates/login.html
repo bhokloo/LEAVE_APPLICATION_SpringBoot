@@ -11,11 +11,19 @@
 <table class="table table-bordered" style="">
 <tr>
 <td>
-<form class="form-inline" action="#" th:action="@{/admin}" th:object="${admin}" method="post">
-		  <p>Username: <input type="text" th:field="*{username}" /></p>
-		  <p>Password: <input type="text" th:field="*{password}" /></p>
-		  <input type="submit" />
-		  <input type="reset" value="Reset" />
+<form class="form-inline" action="#" th:action="@{/user}" th:object="${users}" method="post">
+<fieldset> 
+	 <p>Username: <input type="text" th:field="*{username}" /></p>
+	 <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p> 
+</fieldset> 
+<fieldset> 
+	  
+ 	  <p>Password: <input type="text" th:field="*{password}" /></p>
+ 	  <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p> 
+</fieldset>
+		 <fieldset>   
+		  <input type="submit" value="login"/>
+		  </fieldset>
 	</form>
 </td>
 </tr>
