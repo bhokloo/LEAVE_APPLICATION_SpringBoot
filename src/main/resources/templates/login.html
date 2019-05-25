@@ -11,7 +11,7 @@
 <table class="table table-bordered" style="">
 <tr>
 <td>
-<form class="form-inline" action="#" th:action="@{/user}" th:object="${users}" method="post">
+<form class="form-inline" action="#" th:action="@{/user}" th:object="${allstaff}" method="post">
 <fieldset> 
 	 <p>Username: <input type="text" th:field="*{username}" /></p>
 	 <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p> 
