@@ -22,12 +22,13 @@ public class Manager {
 
 	@OneToMany(mappedBy = "managerfk", fetch=FetchType.EAGER)
 	private List<Employee> emplist;
-    
+
 	@PreRemove
 	public void  setNullToForeingKeys() {
 		 emplist.forEach(x -> x.setManagerfk(null));
+		 
 	}
-	
+
 	public List<Employee> getEmplist() {
 		return emplist;
 	}
@@ -64,6 +65,9 @@ public class Manager {
 		super();
 	}
 
+
+
+
 	public Manager(@NotBlank(message = "Name may not be empty") String managerid, String managername,
 			String managerpassword, List<Employee> emplist) {
 		super();
@@ -76,13 +80,18 @@ public class Manager {
 	@Override
 	public String toString() {
 		return "Manager [managerid=" + managerid + ", managername=" + managername + ", managerpassword="
-				+ managerpassword + ", emplist=" + emplist + "]";
+				+ managerpassword + "]";
 	}
 
 	
 
 	
-	
+
+
+
+
+
+
 	
 
 	

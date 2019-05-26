@@ -15,12 +15,13 @@ import edu.iss.nus.laps.model.Manager;
 public interface ManagerRepo extends JpaRepository<Manager, String>{
 
 	@Transactional
-	@Query("Select s.managername from Manager s where s.managerid = ?1")
-	String findMee(String managerid);
+	@Query("Select s from Manager s where s.managerid = ?1")
+	Manager findMee(String managerid);
 
 	@Transactional
+	@Modifying
 	@Query("Delete from Manager s where s.managerid =?1")
-	List<Manager> deleteByManagerid(String string);
+	void deleteByManagerid(String string);
 
 
 }

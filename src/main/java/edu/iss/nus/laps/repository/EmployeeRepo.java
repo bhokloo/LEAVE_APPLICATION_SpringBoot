@@ -24,7 +24,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, String>{
 
 	@Transactional
 	@Query("Select s from Employee s where s.managerfk.managerid = ?1")
-	List<Object> findAllByManagerfk(String managerfk);
+	List<Employee> findAllByManagerfk(String managerfk);
 
 	@Transactional
 	@Modifying
