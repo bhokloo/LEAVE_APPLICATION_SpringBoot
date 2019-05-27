@@ -45,12 +45,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.iss.nus.laps.model.Leaveapplication;
-
+import edu.iss.nus.laps.model.Manager;
 import edu.iss.nus.laps.model.Users;
 
 import edu.iss.nus.laps.repository.LapsRepository;
 
 import edu.iss.nus.laps.repository.LeaveRepository;
+import edu.iss.nus.laps.repository.ManagerRepo;
 
 
 
@@ -98,8 +99,8 @@ public class MainController {
 
 	private LeaveRepository leaverepo;
 
-
-
+	@Autowired
+	private ManagerRepo managerrepo;
 	
 
 	@GetMapping("/login")
@@ -121,8 +122,12 @@ public class MainController {
 		 Users userdetails = repo.findByUsername(username);
 
 		 List<Users> plist= repo.findAll();
+		 
+		 //List<Manager> managerlist = managerrepo.findAll();
 
 		 model.addAttribute("plist",plist);
+		 
+		 //model.addAttribute("managerlist",managerlist);
 
 		 model.addAttribute("userdetails",userdetails);
 
@@ -183,8 +188,6 @@ public class MainController {
 	@PostMapping("/user")
 
     public String user(@Valid Users users,BindingResult bindingResult) {
-
-		
 
 		if (bindingResult.hasErrors()) 
 

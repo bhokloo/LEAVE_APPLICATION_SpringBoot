@@ -26,17 +26,11 @@ package edu.iss.nus.laps.model;
 
 
 	@Entity
-
 	public class Users {
 
-		
-
 		@Id 
-
 		@NotBlank(message = "Name may not be empty")
-
 		@Column(name="username")
-
 		private String username;
 
 		private String empname;
@@ -45,15 +39,9 @@ package edu.iss.nus.laps.model;
 
 		private String password;
 
-		
-
 		@Transient
 
 		private String userdetails;
-
-		
-
-		
 
 		public String getUserdetails() {
 
@@ -73,19 +61,26 @@ package edu.iss.nus.laps.model;
 
 		}
 
-		
-
 		@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 
 	    @JoinColumn(name = "username", referencedColumnName = "username")
 
 		private List<Leaveapplication> leaveapp;
-
+		
+		
+		
+		@OneToMany(mappedBy = "managerid", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+		private List<Manager> manageridlist;
 		
 
 		
+		public List<Manager> getManageridlist() {
+			return manageridlist;
+		}
 
-		
+		public void setManageridlist(List<Manager> manageridlist) {
+			this.manageridlist = manageridlist;
+		}
 
 		public List<Leaveapplication> getLeaveapp() {
 
