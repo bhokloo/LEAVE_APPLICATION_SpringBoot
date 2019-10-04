@@ -454,3 +454,29 @@ public class MainController {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+var noStop = true; 
+var count = 0,weekends = 0;
+if(endDate.getMonth() >= startDate.getMonth())
+{
+  var tempDate = startDate;
+  while(tempDate < endDate)
+  {
+    if(startDate.getDay() != 0)
+      count++;
+    else if(startDate.getDay() != 6)
+      count+= 0.5;
+
+    tempDate.setDate(tempDate.getDate() + 1);
+  }
+}
